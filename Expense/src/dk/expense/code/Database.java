@@ -1,7 +1,10 @@
 package dk.expense.code;
 
+import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Database {
 
@@ -18,8 +26,8 @@ public class Database {
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://",
-					"", "");
+			con = DriverManager.getConnection("jdbc:mysql://mysql88.unoeuro.com:3306/trampedach_dk_db_testbase",
+					"trampedach_dk", "B4JD8FSB");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -72,13 +80,46 @@ public class Database {
 				ResultSet rs = stmt.executeQuery("select id, name, type, picture from testtabel");
 				while (rs.next()) {
 					blob = rs.getBlob(4);
-//					if (blob != null)
-//						showImage(pic = blobToImage(blob));
+					if (blob != null)
+						showImage(pic = blobToImage(blob));
 					System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
 				}
 			} catch (Exception e) {
 				System.out.println(e);
 			}
 		}
+		
+		public BufferedImage blobToImage(Blob b) {
+
+			BufferedImage pic = null;
+
+//			ResultSet rs = stmt.executeQuery(<Your Query SQL>);  
+			java.sql.Blob blob = b;
+			InputStream in = null;
+			try {
+				in = blob.getBinaryStream();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				pic = ImageIO.read(in);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return pic;
+		}
+		
+		public void showImage(BufferedImage img) {
+
+			JFrame frame = new JFrame();
+			frame.getContentPane().setLayout(new FlowLayout());
+			frame.getContentPane().add(new JLabel(new ImageIcon(img)));
+			frame.pack();
+			frame.setVisible(true);
+		}
+		
 	}
 

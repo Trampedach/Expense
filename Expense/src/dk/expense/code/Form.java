@@ -104,7 +104,8 @@ public class Form  extends Application{
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://", "", "");
+			con = DriverManager.getConnection("jdbc:mysql://mysql88.unoeuro.com:3306/trampedach_dk_db_testbase",
+					"trampedach_dk", "B4JD8FSB");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -152,7 +153,6 @@ public class Form  extends Application{
 		Blob blob = null;
 
 		try {
-//			Connection con = DriverManager.getConnection("jdbc:mysql://mysql88.unoeuro.com:3306/trampedach_dk_db_testbase", "trampedach_dk", "B4JD8FSB");
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("select id, name, type, picture from testtabel");
 			while (rs.next()) {

@@ -27,15 +27,21 @@ public class Screen extends Form{
 		
 		form = new Form();
 		primaryStage.setTitle("Form");
-        Button btn = new Button();
+        
+		Button btn = new Button();
         btn.setText(" Save ");
+        
+        Button btn2 = new Button();
+        btn2.setText(" Get all ");
+        
                
         TextField  box1 = new TextField ();
         box1.setText("Name");
         
         myComboBox = new ComboBox<String>();
         myComboBox.getItems().addAll("Restaurant","Taxi","Train","Plane","Fun");
-        myComboBox.setEditable(false);       
+        myComboBox.setEditable(false);
+        myComboBox.getSelectionModel().selectFirst();
         
         myComboBox.setOnAction(new EventHandler<ActionEvent>() {
         	 
@@ -65,26 +71,45 @@ public class Screen extends Form{
                 BufferedImage b = null;
 
         		form.id = new Id();
-        		form.db = new Database();
+        		db = new Database();
 
         		Reciept r = new Reciept();
 
           		r.readImage();
 
-          		form.db.openDb();
-          		form.db.dbInsert(form.id.getId(), name, type, form.imageToBlob(r.getImg()));
+          		db.openDb();
+          		db.dbInsert(form.id.getId(), name, type, form.imageToBlob(r.getImg()));
 
+        		db.closeDb();
+            }
+        });
+        
+        btn2.setOnAction(new EventHandler<ActionEvent>() {
+       	 
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Select all");
+                
+                BufferedImage b = null;
+
+        		form.id = new Id();
+        		form.db = new Database();
+
+        		Reciept r = new Reciept();
+
+          		form.db.openDb();
         		form.db.selectDb();
         		form.db.closeDb();
             }
         });
  
         GridPane root = new GridPane();
-        root.add(btn,2,5);
-        root.add(box1,2,1);
+        root.add(btn,1,3);
+        root.add(box1,1,2);
         root.add(myComboBox, 2, 2);
+        root.add(btn2,2,3);
         
-        primaryStage.setScene(new Scene(root, 600, 550));
+        primaryStage.setScene(new Scene(root, 250, 100));
         primaryStage.show();
 	}
 	
