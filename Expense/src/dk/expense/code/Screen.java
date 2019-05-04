@@ -1,6 +1,8 @@
 package dk.expense.code;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -22,6 +24,19 @@ public class Screen extends Form{
 	public String name;
 	public Database db;
 	public Form form;
+	public File fil1;
+	public ByteArrayInputStream bais;
+	Reciept r;
+	
+	
+	public Screen() {
+		
+		this.name = "No name";
+		this.type = "No type";
+		this.bais = null;
+	}
+	
+	
 	
 	public void setScreen(Stage primaryStage) {
 		
@@ -33,6 +48,9 @@ public class Screen extends Form{
         
         Button btn2 = new Button();
         btn2.setText(" Get all ");
+        
+        Button btn3 = new Button();
+        btn3.setText(" Get picture ");
         
                
         TextField  box1 = new TextField ();
@@ -73,12 +91,13 @@ public class Screen extends Form{
         		form.id = new Id();
         		db = new Database();
 
-        		Reciept r = new Reciept();
+        		r = new Reciept();
 
-          		r.readImage();
+//          		r.readImage("C:/Users/jespe/Pictures/aceclub.png");
 
           		db.openDb();
-          		db.dbInsert(form.id.getId(), name, type, form.imageToBlob(r.getImg()));
+//          	db.dbInsert(form.id.getId(), name, type, form.imageToBlob(r.getImg()));
+          		db.dbInsert(form.id.getId(), name, type, bais);
 
         		db.closeDb();
             }
@@ -93,23 +112,41 @@ public class Screen extends Form{
                 BufferedImage b = null;
 
         		form.id = new Id();
-        		form.db = new Database();
+        		db = new Database();
 
-        		Reciept r = new Reciept();
+        		r = new Reciept();
 
-          		form.db.openDb();
-        		form.db.selectDb();
-        		form.db.closeDb();
+          		db.openDb();
+        		db.selectDb();
+        		db.closeDb();
+            }
+        });
+
+        btn3.setOnAction(new EventHandler<ActionEvent>() {
+          	 
+            @Override
+            public void handle(ActionEvent event) {
+            	
+                System.out.println("Get picture");
+                
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open Resource File");
+                fil1 = fileChooser.showOpenDialog(primaryStage);
+                r = new Reciept();
+                r.readImage(fil1.getPath());
+                bais = form.imageToBlob(r.getImg());
             }
         });
  
+        
         GridPane root = new GridPane();
         root.add(btn,1,3);
         root.add(box1,1,2);
         root.add(myComboBox, 2, 2);
         root.add(btn2,2,3);
+        root.add(btn3,3,2);
         
-        primaryStage.setScene(new Scene(root, 250, 100));
+        primaryStage.setScene(new Scene(root, 350, 100));
         primaryStage.show();
 	}
 	

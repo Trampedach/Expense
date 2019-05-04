@@ -14,10 +14,11 @@ public class Reciept {
 
 	BufferedImage img = null;
 
-	void readImage() {
+	void readImage(String path) {
 
 		try {
-			img = ImageIO.read(new File("C:/Users/jespe/Pictures/aceclub.png"));
+//			img = ImageIO.read(new File("C:/Users/jespe/Pictures/aceclub.png"));
+			img = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
